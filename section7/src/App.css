@@ -1,0 +1,11 @@
+/* src > App.css */
+
+.App {
+  width: 400px;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column; /* 요소들을 세로로 배치 */
+  gap: 30px;
+}
+
