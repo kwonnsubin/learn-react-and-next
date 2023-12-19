@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import TodoItem from './TodoItem';
 import './TodoList.css';
 
-export default function TodoList({ todos, handleUpdateTodo }) {
+export default function TodoList({ todos, handleUpdateTodo, handleDeleteTodo }) {
 
   const [ search, setSearch ] = useState('');
 
@@ -37,6 +37,7 @@ export default function TodoList({ todos, handleUpdateTodo }) {
             key={ todo.id }
             { ...todo }
             handleUpdateTodo={ handleUpdateTodo }
+            handleDeleteTodo={ handleDeleteTodo }
           />
         )) }
       </div>

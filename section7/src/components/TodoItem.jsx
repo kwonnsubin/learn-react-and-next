@@ -3,11 +3,15 @@
 import './TodoItem.css';
 
 export default function TodoItem(
-  { id, isDone, createdDate, content, handleUpdateTodo }
+  { id, isDone, createdDate, content, handleUpdateTodo, handleDeleteTodo }
 ) {
 
   const handleChangeCheckbox = () => {
     handleUpdateTodo(id);
+  };
+
+  const handleClickDeleteBtn = () => {
+    handleDeleteTodo(id);
   };
 
   return (
@@ -15,7 +19,8 @@ export default function TodoItem(
       <input type="checkbox" checked={ isDone } onChange={ handleChangeCheckbox }/>
       <div className="content">{ content }</div>
       <div className="date">{ new Date(createdDate).toLocaleDateString() }</div>
-      <button>삭제</button>
+      <button onClick={ handleClickDeleteBtn }>삭제</button>
+      { /* <button onClick={ handleClickDeleteBtn() }>삭제</button> X */ }
     </div>
   );
 }

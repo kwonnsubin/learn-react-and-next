@@ -1,6 +1,6 @@
 // src > App.jsx
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useReducer } from 'react';
 import './App.css';
 import Header from './components/Header';
 import TodoEditor from './components/TodoEditor';
@@ -27,35 +27,88 @@ const mockData = [
   }
 ];
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'CREATE': {
+      return [ ...state, action.data ];
+    }
+    case 'UPDATE': {
+      return state.map((it) =>
+        it.id === action.data
+          ? { ...it, isDone: !it.isDone }
+          : it
+      );
+    }
+    case 'DELETE': {
+      return state.filter((it) => it.id !== action.data);
+    }
+  }
+}
+
 function App() {
 
-  const [ todos, setTodos ] = useState( mockData ); // useState( [mockData] ); X
+  // const [ todos, setTodos ] = useState( mockData ); // useState( [mockData] ); X
+  const [ todos, dispatch ] = useReducer(reducer, mockData);
   const idRef = useRef(3);
 
   const handleCreateTodo = (content) => {
-    const newTodo = {
-      id : idRef.current++,
-      isDone : false,
-      content,
-      createdDate : new Date().getTime(),
-    };
+    // const newTodo = {
+    //   id : idRef.current++,
+    //   isDone : false,
+    //   content,
+    //   createdDate : new Date().getTime(),
+    // };
 
-    setTodos(
-      [ ...todos, newTodo ]
-    );
+    // setTodos(
+    //   [ ...todos, newTodo ]
+    // );
+
+    dispatch({
+      type: 'CREATE',
+      data: {
+        id: idRef.current++,
+        isDone: false,
+        content,
+        createdDate: new Date().getTime(),
+      },
+    });
   };
 
   const handleUpdateTodo = (targetId) => {
-    setTodos(todos.map((todo)=>{
-      todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo;
-    }));
+    // setTodos(todos.map((todo)=>{
+    //   todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo;
+    // })); 오류 수정
+
+    // setTodos(
+    //   todos.map((todo) =>
+    //     todo.id === targetId
+    //       ? { ...todo, isDone: !todo.isDone }
+    //       : todo
+    //   )
+    // );
+
+    dispatch({
+      type: 'UPDATE',
+      data: targetId,
+    });
+  };
+
+  const handleDeleteTodo = (targetId) => {
+    // setTodos(
+    //   todos.filter((todo)=>todo.id !== targetId)
+    // );
+
+    dispatch({
+      type: 'DELETE',
+      data: targetId,
+    });
   };
 
   return (
     <div className='App'>
       <Header/>
       <TodoEditor handleCreateTodo={ handleCreateTodo }/>
-      <TodoList todos={ todos } handleUpdateTodo={ handleUpdateTodo }/>
+      <TodoList todos={ todos } handleUpdateTodo={ handleUpdateTodo } handleDeleteTodo={ handleDeleteTodo }/>
     </div>
   );
 }
