@@ -1,5 +1,5 @@
 // src > components > TodoList
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import TodoItem from './TodoItem';
 import './TodoList.css';
 
@@ -23,9 +23,41 @@ export default function TodoList({ todos, handleUpdateTodo, handleDeleteTodo }) 
     ));
   };
 
+  // 전체 투두, 완료 투두, 미완 투두
+  // const getAnalyzedTodoData = () => {
+  //   console.log('TODO 분석 함수 호출');
+  //   const totalCount = todos.length;
+  //   const doneCount = todos.filter((todo)=>todo.isDone).length;
+  //   const notDoneCount = totalCount - doneCount;
+  //   return {
+  //     totalCount,
+  //     doneCount,
+  //     notDoneCount,
+  //   };
+  // };
+
+  // const { totalCount, doneCount, notDoneCount } = getAnalyzedTodoData(); // 구조분해 할당으로 받아오기
+
+  const { totalCount, doneCount, notDoneCount } = useMemo(()=>{
+    // 다시 수행시키고 싶지 않는 연산을 넣어준다.
+    const totalCount = todos.length;
+    const doneCount = todos.filter((todo)=>todo.isDone).length;
+    const notDoneCount = totalCount - doneCount;
+    return {
+      totalCount,
+      doneCount,
+      notDoneCount,
+    };
+  }, [ todos ]);
+
   return (
     <div className="TodoList">
       <h4>Todos</h4>
+      <div>
+        <div>전체 투두 : { totalCount }</div>
+        <div>완료 투두 : { doneCount }</div>
+        <div>미완 투두 : { notDoneCount }</div>
+      </div>
       <input
         value={ search }
         onChange={ handleChangeSearch }
