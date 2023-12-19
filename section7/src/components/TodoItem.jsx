@@ -1,8 +1,9 @@
 // scr > components > TodoItem.jsx
 
 import './TodoItem.css';
+import { memo } from 'react';
 
-export default function TodoItem(
+function TodoItem(
   { id, isDone, createdDate, content, handleUpdateTodo, handleDeleteTodo }
 ) {
 
@@ -24,3 +25,6 @@ export default function TodoItem(
     </div>
   );
 }
+
+
+export default memo(TodoItem);

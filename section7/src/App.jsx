@@ -1,10 +1,11 @@
 // src > App.jsx
 
-import { useState, useRef, useReducer } from 'react';
+import { useState, useRef, useReducer, useCallback } from 'react';
 import './App.css';
 import Header from './components/Header';
 import TodoEditor from './components/TodoEditor';
 import TodoList from './components/TodoList';
+import { TodoContext } from './TodoContext';
 
 const mockData = [
   {
@@ -51,7 +52,7 @@ function App() {
   const [ todos, dispatch ] = useReducer(reducer, mockData);
   const idRef = useRef(3);
 
-  const handleCreateTodo = (content) => {
+  const handleCreateTodo = useCallback((content) => {
     // const newTodo = {
     //   id : idRef.current++,
     //   isDone : false,
@@ -72,9 +73,9 @@ function App() {
         createdDate: new Date().getTime(),
       },
     });
-  };
+  },[]);
 
-  const handleUpdateTodo = (targetId) => {
+  const handleUpdateTodo = useCallback((targetId) => {
     // setTodos(todos.map((todo)=>{
     //   todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo;
     // })); 오류 수정
@@ -91,9 +92,9 @@ function App() {
       type: 'UPDATE',
       data: targetId,
     });
-  };
+  },[]);
 
-  const handleDeleteTodo = (targetId) => {
+  const handleDeleteTodo = useCallback((targetId) => {
     // setTodos(
     //   todos.filter((todo)=>todo.id !== targetId)
     // );
@@ -102,13 +103,15 @@ function App() {
       type: 'DELETE',
       data: targetId,
     });
-  };
+  },[]);
 
   return (
     <div className='App'>
       <Header/>
-      <TodoEditor handleCreateTodo={ handleCreateTodo }/>
-      <TodoList todos={ todos } handleUpdateTodo={ handleUpdateTodo } handleDeleteTodo={ handleDeleteTodo }/>
+      <TodoContext.Provider value={ todos, handleCreateTodo, handleDeleteTodo, handleUpdateTodo }>
+        <TodoEditor handleCreateTodo={ handleCreateTodo }/>
+        <TodoList todos={ todos } handleUpdateTodo={ handleUpdateTodo } handleDeleteTodo={ handleDeleteTodo }/>
+      </TodoContext.Provider>
     </div>
   );
 }
