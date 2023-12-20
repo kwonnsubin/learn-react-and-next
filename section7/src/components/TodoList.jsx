@@ -1,9 +1,12 @@
 // src > components > TodoList
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useContext } from 'react';
 import TodoItem from './TodoItem';
 import './TodoList.css';
+import { TodoStateContext } from '../TodoContext';
 
-export default function TodoList({ todos, handleUpdateTodo, handleDeleteTodo }) {
+export default function TodoList() {
+  // const { todos } = useContext(TodoStateContext); X
+  const todos = useContext(TodoStateContext);
 
   const [ search, setSearch ] = useState('');
 
@@ -68,8 +71,6 @@ export default function TodoList({ todos, handleUpdateTodo, handleDeleteTodo }) 
           <TodoItem
             key={ todo.id }
             { ...todo }
-            handleUpdateTodo={ handleUpdateTodo }
-            handleDeleteTodo={ handleDeleteTodo }
           />
         )) }
       </div>

@@ -1,11 +1,11 @@
 // scr > components > TodoItem.jsx
 
+import { TodoDispatchContext } from '../TodoContext';
 import './TodoItem.css';
-import { memo } from 'react';
+import { memo, useContext } from 'react';
 
-function TodoItem(
-  { id, isDone, createdDate, content, handleUpdateTodo, handleDeleteTodo }
-) {
+function TodoItem({ id, isDone, createdDate, content }) {
+  const { handleUpdateTodo, handleDeleteTodo } = useContext(TodoDispatchContext);
 
   const handleChangeCheckbox = () => {
     handleUpdateTodo(id);

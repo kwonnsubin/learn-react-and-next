@@ -1,11 +1,11 @@
 // src > App.jsx
 
-import { useState, useRef, useReducer, useCallback } from 'react';
+import { useState, useRef, useReducer, useCallback, useMemo } from 'react';
 import './App.css';
 import Header from './components/Header';
 import TodoEditor from './components/TodoEditor';
 import TodoList from './components/TodoList';
-import { TodoContext } from './TodoContext';
+import { TodoStateContext, TodoDispatchContext } from './TodoContext';
 
 const mockData = [
   {
@@ -105,13 +105,24 @@ function App() {
     });
   },[]);
 
+  // 다시는 재생성되지 않는 객체가 저장
+  const memoizedDispatches = useMemo(()=>{
+    return {
+      handleCreateTodo,
+      handleUpdateTodo,
+      handleDeleteTodo,
+    };
+  },[]);
+
   return (
     <div className='App'>
       <Header/>
-      <TodoContext.Provider value={ todos, handleCreateTodo, handleDeleteTodo, handleUpdateTodo }>
-        <TodoEditor handleCreateTodo={ handleCreateTodo }/>
-        <TodoList todos={ todos } handleUpdateTodo={ handleUpdateTodo } handleDeleteTodo={ handleDeleteTodo }/>
-      </TodoContext.Provider>
+      <TodoStateContext.Provider value={ todos }>
+        <TodoDispatchContext.Provider value={ memoizedDispatches }>
+          <TodoEditor/>
+          <TodoList/>
+        </TodoDispatchContext.Provider>
+      </TodoStateContext.Provider>
     </div>
   );
 }
